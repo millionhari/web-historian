@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
 var urlParser = require('url');
+var http = require("http");
 
 // var fs = require('fs-utils');
 
@@ -35,9 +36,7 @@ exports.parseRoute = function(url){
 }
 
 exports.readListOfUrls = function(){
-
   var urls = fs.readFileSync(exports.paths.list, 'utf8').split('\n');
-  //var urls = fs.readFileSync('./archives/sites.txt', 'utf8').split('\n');
   return urls.slice(0,urls.length-1);
 };
 
@@ -52,14 +51,26 @@ exports.addUrlToList = function(url){
   // check if duplicate
     // write urls to sites.txt
   list.push(url);
-  fs.writeFileSync('./archives/sites.txt', 'utf8', list.join('\n'));
-
+  fs.writeFileSync(exports.paths.list, 'utf8', list.join('\n'));
 };
 
 exports.isUrlArchived = function(url){
-  return fs.existsSync('./archives/sites/'+url);
+  return fs.existsSync(exports.paths.archivedSites.concat(url));
 };
 
 exports.downloadUrls = function(){
-
+  // get url list
+  var list = exports.readListOfUrls();
+  // loop over list
+  _.each(list, function(url){
+  // send get request to url
+    var file = fs.createWriteStream(exports.paths.archivedSites.concat(url));
+    http.get(url, function(response){
+      response.pipe(file);
+      file.on('finish', function(){
+        file.close();
+      });
+    });
+  });
+  // save response to file inside archives/sites
 };

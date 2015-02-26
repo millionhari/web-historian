@@ -13,7 +13,6 @@ exports.router = {
       httpHelpers.serveAssets(res, index, function(){
         res.end();
       });
-      console.log(archive.readListOfUrls());
     }
     if (route === '/styles.css'){
       //serve up styles
@@ -32,9 +31,18 @@ exports.router = {
         data += chunk;
       });
       req.on('end', function(){
+
+        //TODO: data currently looks like:
+        // url=www.domain.com
+        // we need to parse it to extract just the url
+        console.log(data);
         if (!archive.isUrlInList(data)){
           archive.addUrlToList(data);
           //perform redirect to loading page
+          var loading = archive.paths.siteAssets.concat('/loading.html');
+          httpHelpers.serveAssets(res, loading, function(){
+            res.end();
+          });
         }
         if (archive.isUrlInList(data) && !isUrlArchived()){
           //perform redirect to loading page
