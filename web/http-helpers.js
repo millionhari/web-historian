@@ -20,6 +20,22 @@ exports.serveAssets = function(res, asset, callback) {
   })
 };
 
+exports.formValues = function(data){
+  var splits = data.split('&');
+  var hash = [];
+  for (var i = 0; i < splits.length; i++){
+    var element = splits[i].split('=');
+    hash[element[0]] = element[1];
+  }
+  return hash;
+};
 
+exports.serveLoading = function(res){
+  //perform redirect to loading page
+  var loading = archive.paths.siteAssets.concat('/loading.html');
+  exports.serveAssets(res, loading, function(){
+    res.end();
+  });
+};
 
 // As you progress, keep thinking about what helper functions you can put here!

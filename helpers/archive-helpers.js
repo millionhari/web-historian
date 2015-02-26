@@ -51,7 +51,7 @@ exports.addUrlToList = function(url){
   // check if duplicate
     // write urls to sites.txt
   list.push(url);
-  fs.writeFileSync(exports.paths.list, 'utf8', list.join('\n'));
+  fs.writeFileSync(exports.paths.list, list.join('\n'), 'utf8');
 };
 
 exports.isUrlArchived = function(url){

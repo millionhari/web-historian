@@ -13,6 +13,8 @@ exports.router = {
       httpHelpers.serveAssets(res, index, function(){
         res.end();
       });
+
+
     }
     if (route === '/styles.css'){
       //serve up styles
@@ -31,23 +33,15 @@ exports.router = {
         data += chunk;
       });
       req.on('end', function(){
-
-        //TODO: data currently looks like:
-        // url=www.domain.com
-        // we need to parse it to extract just the url
-        console.log(data);
-        if (!archive.isUrlInList(data)){
-          archive.addUrlToList(data);
-          //perform redirect to loading page
-          var loading = archive.paths.siteAssets.concat('/loading.html');
-          httpHelpers.serveAssets(res, loading, function(){
-            res.end();
-          });
+        var url = httpHelpers.formValues(data).url;
+        if (!archive.isUrlInList(url)){
+          archive.addUrlToList(url);
+          httpHelpers.serveLoading(res);
         }
-        if (archive.isUrlInList(data) && !isUrlArchived()){
+        if (archive.isUrlInList(url) && !isUrlArchived()){
           //perform redirect to loading page
         }
-        if (archive.isUrlInList(data) && isUrlArchived()){
+        if (archive.isUrlInList(url) && isUrlArchived()){
           //perform redirect to archived page
         }
       });
