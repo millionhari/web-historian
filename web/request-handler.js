@@ -13,6 +13,7 @@ exports.router = {
       httpHelpers.serveAssets(res, index, function(){
         res.end();
       });
+      console.log(archive.readListOfUrls());
     }
     if (route === '/styles.css'){
       //serve up styles
@@ -21,16 +22,35 @@ exports.router = {
         res.end();
       });
     }
-    archive.readListOfUrls();
-    console.log(archive.isUrlInList('www.amazon.com'));
-    // look up website in sites.txt
-    // if exists in archive
-      //serve it up
-    // else serve up to loading.html
+    // console.log(archive.readListOfUrls());
   },
   POST: function(req, res){
     var route = archive.parseRoute(req.url);
-    // if (route === '/'){}
+    if (route === '/'){
+      var data = "";
+      req.on('data', function(chunk){
+        data += chunk;
+      });
+      req.on('end', function(){
+        if (!archive.isUrlInList(data)){
+          archive.addUrlToList(data);
+          //perform redirect to loading page
+        }
+        if (archive.isUrlInList(data) && !isUrlArchived()){
+          //perform redirect to loading page
+        }
+        if (archive.isUrlInList(data) && isUrlArchived()){
+          //perform redirect to archived page
+        }
+      });
+      //retrieve data sent in request
+      //see if it's in URL list
+        //if not in list
+          //add url to list and redirect to loading
+        //if on list and is archived
+          //redirect to archived url
+    }
+
   }
 };
 
@@ -38,16 +58,5 @@ exports.handleRequest = function (req, res) {
 
   exports.router[req.method](req, res);
 
-
-  // handle GET requests
-  // if(req.method === 'GET'){
-
-  //   // respond with homepage
-  //   if(req.url === '/'){
-  //     console.log('the url', req.url);
-
-  //   }
-  // }
-  // res.end(archive.paths.list);
 
 };

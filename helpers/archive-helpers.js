@@ -36,12 +36,13 @@ exports.parseRoute = function(url){
 
 exports.readListOfUrls = function(){
 
-  var urls = fs.readFileSync('./archives/sites.txt', 'utf8').split('\n');
+  var urls = fs.readFileSync(exports.paths.list, 'utf8').split('\n');
+  //var urls = fs.readFileSync('./archives/sites.txt', 'utf8').split('\n');
   return urls.slice(0,urls.length-1);
 };
 
-exports.isUrlInList = function(url, list){
-  list = list || exports.readListOfUrls();
+exports.isUrlInList = function(url){
+  var list = exports.readListOfUrls();
   return list.indexOf(url) > -1;
 };
 
@@ -49,16 +50,16 @@ exports.addUrlToList = function(url){
   // get urls
   var list = exports.readListOfUrls();
   // check if duplicate
-  if (!exports.isUrlInList(url, list)){
     // write urls to sites.txt
-    list.push(url);
-    fs.writeFileSync('./archives/sites.txt', 'utf8', list.join('\n'));
-  }
+  list.push(url);
+  fs.writeFileSync('./archives/sites.txt', 'utf8', list.join('\n'));
 
 };
 
-exports.isURLArchived = function(){
+exports.isUrlArchived = function(url){
+  return fs.existsSync('./archives/sites/'+url);
 };
 
 exports.downloadUrls = function(){
+
 };
