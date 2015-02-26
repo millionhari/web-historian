@@ -41,13 +41,13 @@ exports.router = {
         }
 
         // pending submission
-        if (archive.isUrlInList(url) && !archive.isUrlArchived(url)){
+        else if (archive.isUrlInList(url) && !archive.isUrlArchived(url)){
           console.log('pending submission');
           httpHelpers.serveLoading(res);
         }
 
         // take them to the page
-        if (archive.isUrlInList(url) && archive.isUrlArchived(url)){
+        else if (archive.isUrlInList(url) && archive.isUrlArchived(url)){
           console.log('redirect to archived page');
           var site = archive.paths.archivedSites.concat('/'+url);
           httpHelpers.serveAssets(res, site, function(){

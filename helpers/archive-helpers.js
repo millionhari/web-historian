@@ -35,10 +35,7 @@ exports.isUrlInList = function(url){
 };
 
 exports.addUrlToList = function(url){
-  // get urls
   var list = exports.readListOfUrls();
-  // check if duplicate
-    // write urls to sites.txt
   list.push(url);
   fs.writeFileSync(exports.paths.list, list.join('\n'), 'utf8');
 };
@@ -50,22 +47,25 @@ exports.isUrlArchived = function(url){
 exports.downloadUrls = function(){
 
   console.log('begin downloading URLs');
-  // get url list
   var list = exports.readListOfUrls();
 
   // loop over list
   _.each(list, function(site){
 
     // check for HTTP protocol
-    if (site.indexOf('http://') === -1){
-      site = 'http://'.concat(site);
-    }
+    site = site.indexOf('http://') === -1 ? 'http://'.concat(site) : site;
+
+    // if (site.indexOf('http://') === -1){
+    //   site = 'http://'.concat(site);
+    // }
 
     // send get request to url
     var fileName = urlParser.parse(site);
     fileName = fileName.hostname;
     var file = fs.createWriteStream(exports.paths.archivedSites.concat('/'+fileName));
     request(site).pipe(file);
+
   });
+
   console.log('finished downloading URLs')
 };
