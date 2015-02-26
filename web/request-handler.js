@@ -33,16 +33,34 @@ exports.router = {
         data += chunk;
       });
       req.on('end', function(){
+        // gets url from form submission
         var url = httpHelpers.formValues(data).url;
+
+        // new submission
         if (!archive.isUrlInList(url)){
+          console.log('new submission');
           archive.addUrlToList(url);
           httpHelpers.serveLoading(res);
         }
-        if (archive.isUrlInList(url) && !isUrlArchived()){
-          //perform redirect to loading page
+
+        console.log(archive.isUrlInList(url));
+        console.log(archive.isUrlArchived(url));
+
+        // pending submission
+        if (archive.isUrlInList(url) && !archive.isUrlArchived(url)){
+          console.log('pending submission');
+          httpHelpers.serveLoading(res);
         }
-        if (archive.isUrlInList(url) && isUrlArchived()){
+
+        // take them to the page
+        if (archive.isUrlInList(url) && archive.isUrlArchived(url)){
           //perform redirect to archived page
+          console.log('redirect to archived page');
+          var site = archive.paths.archivedSites.concat('/'+url);
+          console.log(site);
+          httpHelpers.serveAssets(res, site, function(){
+            res.end();
+          });
         }
       });
       //retrieve data sent in request
