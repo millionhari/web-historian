@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var lineReader = require('line-reader');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -26,6 +27,13 @@ exports.initialize = function(pathsObj){
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(){
+  var urls = [];
+  lineReader.eachLine("./archives/sites.txt", function(line, last){
+    urls.push(line);
+  }).then(function(){
+    console.log('DONE!');
+  });
+  return urls;
 };
 
 exports.isUrlInList = function(){

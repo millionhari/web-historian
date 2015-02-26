@@ -9,20 +9,21 @@ exports.router = {
     // get route from URL
     var parts = urlParser.parse(req.url);
     var route = parts.pathname;
-    // if '/'
     if (route === '/'){
-      //serve up to index.html
+      //serve up index.html
       var index = archive.paths.siteAssets.concat('/index.html');
       httpHelpers.serveAssets(res, index, function(){
         res.end();
       });
     }
     if (route === '/styles.css'){
+      //serve up styles
       var style = archive.paths.siteAssets.concat('/styles.css');
       httpHelpers.serveAssets(res, style, function(){
         res.end();
       });
     }
+    archive.readListOfUrls();
     // look up website in sites.txt
     // if exists in archive
       //serve it up
