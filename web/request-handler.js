@@ -24,7 +24,7 @@ exports.router = {
       });
     }
     archive.readListOfUrls();
-    // console.log(archive.isUrlInList('www.amazon.com'));
+    console.log(archive.isUrlInList('www.amazon.com'));
     // look up website in sites.txt
     // if exists in archive
       //serve it up

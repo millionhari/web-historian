@@ -29,15 +29,12 @@ exports.initialize = function(pathsObj){
 exports.readListOfUrls = function(){
 
   var urls = fs.readFileSync('./archives/sites.txt', 'utf8').split('\n');
-  urls = urls.slice(0,urls.length-1);
-
-  console.log(urls);
+  return urls.slice(0,urls.length-1);
 };
 
 exports.isUrlInList = function(url){
-  // var urls = exports.readListOfUrls();
-  // console.log(urls.indexOf(url));
-  // return urls.indexOf(url) > -1;
+  var urls = exports.readListOfUrls();
+  return urls.indexOf(url) > -1;
 };
 
 exports.addUrlToList = function(){
