@@ -1,6 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var urlParser = require('url');
+
 // var fs = require('fs-utils');
 
 /*
@@ -26,18 +28,33 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
+exports.parseRoute = function(url){
+  var parts = urlParser.parse(url);
+  var route = parts.pathname;
+  return route;
+}
+
 exports.readListOfUrls = function(){
 
   var urls = fs.readFileSync('./archives/sites.txt', 'utf8').split('\n');
   return urls.slice(0,urls.length-1);
 };
 
-exports.isUrlInList = function(url){
-  var urls = exports.readListOfUrls();
-  return urls.indexOf(url) > -1;
+exports.isUrlInList = function(url, list){
+  list = list || exports.readListOfUrls();
+  return list.indexOf(url) > -1;
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(url){
+  // get urls
+  var list = exports.readListOfUrls();
+  // check if duplicate
+  if (!exports.isUrlInList(url, list)){
+    // write urls to sites.txt
+    list.push(url);
+    fs.writeFileSync('./archives/sites.txt', 'utf8', list.join('\n'));
+  }
+
 };
 
 exports.isURLArchived = function(){

@@ -1,14 +1,12 @@
 var path = require('path');
 var archive = require('../helpers/archive-helpers');
-var urlParser = require('url');
 var httpHelpers = require('./http-helpers');
 // require more modules/folders here!
 
 exports.router = {
   GET: function(req, res){
     // get route from URL
-    var parts = urlParser.parse(req.url);
-    var route = parts.pathname;
+    var route = archive.parseRoute(req.url);
     if (route === '/'){
       //serve up index.html
       var index = archive.paths.siteAssets.concat('/index.html');
@@ -29,6 +27,10 @@ exports.router = {
     // if exists in archive
       //serve it up
     // else serve up to loading.html
+  },
+  POST: function(req, res){
+    var route = archive.parseRoute(req.url);
+    // if (route === '/'){}
   }
 };
 
