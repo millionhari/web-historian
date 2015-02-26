@@ -52,18 +52,19 @@ exports.downloadUrls = function(){
   // loop over list
   _.each(list, function(site){
 
-    // check for HTTP protocol
+    // adds http:// to site URL
     site = site.indexOf('http://') === -1 ? 'http://'.concat(site) : site;
 
-    // if (site.indexOf('http://') === -1){
-    //   site = 'http://'.concat(site);
-    // }
-
-    // send get request to url
+    // creates a valid file name from site URL
     var fileName = urlParser.parse(site);
     fileName = fileName.hostname;
-    var file = fs.createWriteStream(exports.paths.archivedSites.concat('/'+fileName));
-    request(site).pipe(file);
+
+    // archives url
+    if(!exports.isUrlArchived(fileName)){
+      var file = fs.createWriteStream(exports.paths.archivedSites.concat('/'+fileName));
+      request(site).pipe(file);
+      console.log(site, 'downloaded');
+    }
 
   });
 
