@@ -3,6 +3,9 @@ var path = require('path');
 var _ = require('underscore');
 var urlParser = require('url');
 var http = require("http");
+var httpHelpers = require('../web/http-helpers');
+var request = require('request');
+
 
 // var fs = require('fs-utils');
 
@@ -62,15 +65,16 @@ exports.downloadUrls = function(){
   // get url list
   var list = exports.readListOfUrls();
   // loop over list
-  _.each(list, function(url){
+  _.each(list, function(site){
+    if (site.indexOf('http://') === -1){
+      site = 'http://'.concat(site);
+    }
   // send get request to url
-    var file = fs.createWriteStream(exports.paths.archivedSites.concat(url));
-    http.get(url, function(response){
-      response.pipe(file);
-      file.on('finish', function(){
-        file.close();
-      });
-    });
+    var fileName = urlParser.parse(site);
+    fileName = fileName.hostname;
+    console.log(fileName);
+    var file = fs.createWriteStream(exports.paths.archivedSites.concat('/'+fileName));
+    request(site).pipe(file);
   });
   // save response to file inside archives/sites
 };
