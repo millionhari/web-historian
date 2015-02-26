@@ -11,8 +11,6 @@ exports.headers = headers = {
 };
 
 exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
   fs.readFile(asset, "binary", function(err, file){
     res.writeHead(200);
     res.write(file, "binary");
@@ -31,11 +29,8 @@ exports.formValues = function(data){
 };
 
 exports.serveLoading = function(res){
-  //perform redirect to loading page
   var loading = archive.paths.siteAssets.concat('/loading.html');
   exports.serveAssets(res, loading, function(){
     res.end();
   });
 };
-
-// As you progress, keep thinking about what helper functions you can put here!

@@ -3,18 +3,7 @@ var path = require('path');
 var _ = require('underscore');
 var urlParser = require('url');
 var http = require("http");
-var httpHelpers = require('../web/http-helpers');
 var request = require('request');
-
-
-// var fs = require('fs-utils');
-
-/*
- * You will need to reuse the same paths many times over in the course of this sprint.
- * Consider using the `paths` object below to store frequently used file paths. This way,
- * if you move any files, you'll only need to change your code in one place! Feel free to
- * customize it in any way you wish.
- */
 
 exports.paths = {
   'siteAssets' : path.join(__dirname, '../web/public'),
@@ -29,9 +18,6 @@ exports.initialize = function(pathsObj){
   });
 };
 
-// The following function names are provided to you to suggest how you might
-// modularize your code. Keep it clean!
-
 exports.parseRoute = function(url){
   var parts = urlParser.parse(url);
   var route = parts.pathname;
@@ -40,7 +26,7 @@ exports.parseRoute = function(url){
 
 exports.readListOfUrls = function(){
   var urls = fs.readFileSync(exports.paths.list, 'utf8').split('\n');
-  return urls.slice(0,urls.length-1);
+  return _.filter(urls, function(url){ return url !== ""; });
 };
 
 exports.isUrlInList = function(url){
@@ -62,19 +48,24 @@ exports.isUrlArchived = function(url){
 };
 
 exports.downloadUrls = function(){
+
+  console.log('begin downloading URLs');
   // get url list
   var list = exports.readListOfUrls();
+
   // loop over list
   _.each(list, function(site){
+
+    // check for HTTP protocol
     if (site.indexOf('http://') === -1){
       site = 'http://'.concat(site);
     }
-  // send get request to url
+
+    // send get request to url
     var fileName = urlParser.parse(site);
     fileName = fileName.hostname;
-    console.log(fileName);
     var file = fs.createWriteStream(exports.paths.archivedSites.concat('/'+fileName));
     request(site).pipe(file);
   });
-  // save response to file inside archives/sites
+  console.log('finished downloading URLs')
 };

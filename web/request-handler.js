@@ -1,7 +1,6 @@
 var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var httpHelpers = require('./http-helpers');
-// require more modules/folders here!
 
 exports.router = {
   GET: function(req, res){
@@ -13,9 +12,8 @@ exports.router = {
       httpHelpers.serveAssets(res, index, function(){
         res.end();
       });
-
-
     }
+
     if (route === '/styles.css'){
       //serve up styles
       var style = archive.paths.siteAssets.concat('/styles.css');
@@ -23,7 +21,6 @@ exports.router = {
         res.end();
       });
     }
-    // console.log(archive.readListOfUrls());
   },
   POST: function(req, res){
     var route = archive.parseRoute(req.url);
@@ -43,9 +40,6 @@ exports.router = {
           httpHelpers.serveLoading(res);
         }
 
-        console.log(archive.isUrlInList(url));
-        console.log(archive.isUrlArchived(url));
-
         // pending submission
         if (archive.isUrlInList(url) && !archive.isUrlArchived(url)){
           console.log('pending submission');
@@ -54,29 +48,18 @@ exports.router = {
 
         // take them to the page
         if (archive.isUrlInList(url) && archive.isUrlArchived(url)){
-          //perform redirect to archived page
           console.log('redirect to archived page');
           var site = archive.paths.archivedSites.concat('/'+url);
-          console.log(site);
           httpHelpers.serveAssets(res, site, function(){
             res.end();
           });
         }
       });
-      //retrieve data sent in request
-      //see if it's in URL list
-        //if not in list
-          //add url to list and redirect to loading
-        //if on list and is archived
-          //redirect to archived url
     }
 
   }
 };
 
 exports.handleRequest = function (req, res) {
-
   exports.router[req.method](req, res);
-
-
 };
