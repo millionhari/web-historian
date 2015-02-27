@@ -6,6 +6,7 @@ exports.router = {
   GET: function(req, res){
     // get route from URL
     var route = archive.parseRoute(req.url);
+    console.log(route);
     if (route === '/'){
       //serve up index.html
       var index = archive.paths.siteAssets.concat('/index.html');
@@ -14,13 +15,24 @@ exports.router = {
       });
     }
 
-    if (route === '/styles.css'){
+    else if (route === '/styles.css'){
       //serve up styles
       var style = archive.paths.siteAssets.concat('/styles.css');
       httpHelpers.serveAssets(res, style, function(){
         res.end();
       });
     }
+
+    else if (route === '/loading.html'){
+      httpHelpers.serveLoading(res);
+    }
+
+    else if (archive.isUrlArchived(route)){
+      httpHelpers.serveAssets(res, route, function(){
+        res.end();
+      });
+    }
+
   },
   POST: function(req, res){
     var route = archive.parseRoute(req.url);
@@ -37,22 +49,20 @@ exports.router = {
         if (!archive.isUrlInList(url)){
           console.log('new submission');
           archive.addUrlToList(url);
-          httpHelpers.serveLoading(res);
+          httpHelpers.sendRedirect(res, '/loading.html');
         }
 
         // pending submission
-        else if (archive.isUrlInList(url) && !archive.isUrlArchived(url)){
+        else if (archive.isUrlInList(url) && !archive.isUrlArchived(archive.paths.archivedSites.concat('/'+url))){
           console.log('pending submission');
-          httpHelpers.serveLoading(res);
+          httpHelpers.sendRedirect(res, '/loading.html');
         }
 
         // take them to the page
-        else if (archive.isUrlInList(url) && archive.isUrlArchived(url)){
+        else if (archive.isUrlInList(url) && archive.isUrlArchived(archive.paths.archivedSites.concat('/'+url))){
           console.log('redirect to archived page');
           var site = archive.paths.archivedSites.concat('/'+url);
-          httpHelpers.serveAssets(res, site, function(){
-            res.end();
-          });
+          httpHelpers.sendRedirect(res, site);
         }
       });
     }

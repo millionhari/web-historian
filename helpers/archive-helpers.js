@@ -41,7 +41,7 @@ exports.addUrlToList = function(url){
 };
 
 exports.isUrlArchived = function(url){
-  return fs.existsSync(exports.paths.archivedSites.concat('/'+url));
+  return fs.existsSync(url);
 };
 
 exports.downloadUrls = function(){
@@ -58,9 +58,8 @@ exports.downloadUrls = function(){
     // creates a valid file name from site URL
     var fileName = urlParser.parse(site);
     fileName = fileName.hostname;
-
     // archives url
-    if(!exports.isUrlArchived(fileName)){
+    if(!exports.isUrlArchived(exports.paths.archivedSites.concat('/'+fileName))){
       var file = fs.createWriteStream(exports.paths.archivedSites.concat('/'+fileName));
       request(site).pipe(file);
       console.log(site, 'downloaded');
@@ -70,3 +69,4 @@ exports.downloadUrls = function(){
 
   console.log('finished downloading URLs')
 };
+

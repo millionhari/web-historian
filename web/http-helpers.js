@@ -12,7 +12,7 @@ exports.headers = headers = {
 
 exports.serveAssets = function(res, asset, callback) {
   fs.readFile(asset, "binary", function(err, file){
-    res.writeHead(200);
+    res.writeHead(200, headers);
     res.write(file, "binary");
     callback();
   })
@@ -33,4 +33,20 @@ exports.serveLoading = function(res){
   exports.serveAssets(res, loading, function(){
     res.end();
   });
+};
+
+exports.sendResponse = function(res, obj, status){
+  status = status || 200;
+  res.writeHead(status, headers);
+  res.end(obj);
+};
+
+exports.send404 = function(res){
+  exports.sendResponse(res, '404: Page not found', 404);
+};
+
+exports.sendRedirect = function(res, location, status){
+  status = status || 302;
+  res.writeHead(status, {Location: location});
+  res.end();
 };
