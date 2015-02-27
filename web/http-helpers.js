@@ -12,7 +12,7 @@ exports.headers = headers = {
 
 exports.serveAssets = function(res, asset, callback) {
   fs.readFile(asset, "binary", function(err, file){
-    res.writeHead(200, headers);
+    res.writeHead(200);
     res.write(file, "binary");
     callback();
   })

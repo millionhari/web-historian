@@ -1,4 +1,69 @@
 body {
   margin : 0px;
-  font-family: arial, sans-serif;
+  font-family: 'Roboto Slab', serif;
+}
+
+h1 {
+  font-family: 'Roboto Slab', sans-serif;
+  margin-bottom: 7px;
+}
+
+.container {
+  position:absolute;
+  margin:auto;
+  height:500px;
+  width:600px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.form-container {
+  position:absolute;
+  margin:auto;
+  height:100px;
+  width:400px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 15px;
+}
+
+input[type="input"] {
+  position:absolute;
+  margin:auto;
+  height:30px;
+  width:350px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px;
+}
+
+.title {
+  text-align: center;
+  font-size: 36px;
+}
+
+
+video#bgvid {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100;
+  background-size: cover;
+}
+
+.credits{
+  text-align: center;
+  position: relative;
 }
